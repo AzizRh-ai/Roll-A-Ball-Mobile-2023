@@ -41,6 +41,7 @@ public class Player : MonoBehaviour, IMovement
 
     [SerializeField] private int healt = 5;
     [SerializeField] private Image[] hearts;
+    [SerializeField] private Image Keys;
 
     public float JumpForce { get { return jumpForce; } }
 
@@ -137,11 +138,19 @@ public class Player : MonoBehaviour, IMovement
             //destruction de l'ojb
             Destroy(other.gameObject);
         }
+        else if (other.gameObject.CompareTag("Key"))
+        {
+            UpdateScore(50);
+            GameObject go = Instantiate(_coinEffectPrefab, other.transform.position, Quaternion.identity);
+            Destroy(go, .2f);
+            //destruction de l'ojb
+            Destroy(other.gameObject);
+        }
     }
 
-    private void UpdateScore()
+    private void UpdateScore(int value = 1)
     {
-        ScoreValue++;
+        ScoreValue += value;
 
         //j'invoque OnScoreUpdate
         OnScoreUpdate?.Invoke(ScoreValue);
@@ -149,7 +158,7 @@ public class Player : MonoBehaviour, IMovement
         //je save aussi dans le registre la cl� Score
         //HKEY_CURRENT_USER\Software\Unity\UnityEditor\DefaultCompany\Roll_A_Ball
         PlayerPrefs.SetInt("Score", ScoreValue);
-        scoreText.text = "Score: " + ScoreValue.ToString();
+        scoreText.text = ScoreValue.ToString();
         //TODO:Instancier 3 mur autour du player
         //Instantiate(_wallPrefab, _scenario.Wall[_scenario.Score - 1], Quaternion.identity);
 

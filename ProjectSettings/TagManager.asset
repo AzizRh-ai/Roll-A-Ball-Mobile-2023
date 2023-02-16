@@ -8,6 +8,7 @@ TagManager:
   - Ground
   - GameOverPlane
   - Coin
+  - Key
   layers:
   - Default
   - TransparentFX

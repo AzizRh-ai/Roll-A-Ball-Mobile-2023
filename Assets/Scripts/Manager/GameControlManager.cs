@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,20 +7,14 @@ public class GameControlManager : MonoBehaviour
 {
     public static GameControlManager instance;
     [SerializeField] private GameObject GameOverPanel;
+    [Header("Timer UI")]
+    [SerializeField] private TextMeshProUGUI TimerUi;
     private float timer = 30f;
 
     // Check/Set only 1 instance
     void Awake()
     {
-        if (instance != null)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
+        instance = this;
     }
 
     //Set GameOverPanel on Start
@@ -31,9 +26,15 @@ public class GameControlManager : MonoBehaviour
     private void Update()
     {
         timer -= Time.deltaTime;
+        TimerUi.text = timer.ToString();
         if (timer <= 0)
         {
             GameOver();
+        }
+        else
+        {
+            int timeSecond = (int)timer;
+            TimerUi.text = timeSecond.ToString();
         }
     }
     // Load/Reload Scene
@@ -64,6 +65,7 @@ public class GameControlManager : MonoBehaviour
 
     public void GameOver()
     {
+        TimerUi.text = "0";
         GameOverPanel.SetActive(true);
         Time.timeScale = 0;
     }
