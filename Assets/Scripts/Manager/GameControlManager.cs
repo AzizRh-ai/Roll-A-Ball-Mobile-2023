@@ -7,6 +7,7 @@ public class GameControlManager : MonoBehaviour
     public static GameControlManager instance;
     [SerializeField] private GameObject GameOverPanel;
 
+    // Check/Set only 1 instance
     void Awake()
     {
         if (instance != null)
@@ -20,7 +21,7 @@ public class GameControlManager : MonoBehaviour
         }
     }
 
-    //Set GameOverPanel Hidden
+    //Set GameOverPanel on Start
     private void Start()
     {
         GameOverPanel.SetActive(false);
@@ -41,8 +42,12 @@ public class GameControlManager : MonoBehaviour
         yield return null;
     }
 
+    public void RestartBtn()
+    {
+        StartCoroutine(manageScene(SceneManager.GetActiveScene().buildIndex));
+    }
     // Quit
-    public void QuitGame()
+    public void QuitGameBtn()
     {
         Application.Quit();
     }
