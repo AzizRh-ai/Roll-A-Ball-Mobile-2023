@@ -6,6 +6,7 @@ public class GameControlManager : MonoBehaviour
 {
     public static GameControlManager instance;
     [SerializeField] private GameObject GameOverPanel;
+    private float timer = 30f;
 
     // Check/Set only 1 instance
     void Awake()
@@ -27,6 +28,14 @@ public class GameControlManager : MonoBehaviour
         GameOverPanel.SetActive(false);
     }
 
+    private void Update()
+    {
+        timer -= Time.deltaTime;
+        if (timer <= 0)
+        {
+            GameOver();
+        }
+    }
     // Load/Reload Scene
     public IEnumerator manageScene(int lvlIndex)
     {
