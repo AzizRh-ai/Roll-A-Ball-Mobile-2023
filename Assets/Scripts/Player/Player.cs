@@ -33,7 +33,7 @@ public class Player : MonoBehaviour, IMovement
 
     [Header("Input")]
     [SerializeField] private InputBtn jumpButton;
-    private bool isGrounded = true;
+    public bool isGrounded = true;
     private Vector2 inputJoystickMovement;
 
     [SerializeField] private float jumpForce = 10f;
@@ -48,6 +48,7 @@ public class Player : MonoBehaviour, IMovement
 
     private void Start()
     {
+        // Todo: tester sur Mobile 
         jumpButton = FindObjectOfType<InputBtn>();
         _rigidbody = GetComponent<Rigidbody>();
         SetHealtUi();
@@ -75,9 +76,11 @@ public class Player : MonoBehaviour, IMovement
         switch (collision.gameObject.tag)
         {
             case "Enemy":
-                Destroy(collision.gameObject);
+                if (!isGrounded)
+                {
+                    Destroy(collision.gameObject);
+                }
 
-                UpdateScore();
                 break;
             case "Ground":
                 isGrounded = true;
@@ -87,8 +90,7 @@ public class Player : MonoBehaviour, IMovement
                 StartCoroutine(GameControlManager.instance.manageScene(SceneManager.GetActiveScene().buildIndex + 1));
                 break;
             case "GameOverPlane":
-                gameOver.SetActive(true);
-                //Time.timeScale = 0;
+                GameControlManager.instance.GameOver();
                 break;
             default:
                 break;
@@ -101,11 +103,9 @@ public class Player : MonoBehaviour, IMovement
 
         if (healt <= 0)
         {
-            gameOver.SetActive(true);
             healt = 0;
-            Time.timeScale = 0;
+            GameControlManager.instance.GameOver();
         }
-
         SetHealtUi();
     }
 
@@ -130,7 +130,7 @@ public class Player : MonoBehaviour, IMovement
     {
         if (other.gameObject.CompareTag("Coin"))
         {
-            Debug.Log("Coin touché!");
+            UpdateScore();
             //lancer particule et detruire après 2sec..
             GameObject go = Instantiate(_coinEffectPrefab, other.transform.position, Quaternion.identity);
             Destroy(go, .2f);
@@ -149,7 +149,7 @@ public class Player : MonoBehaviour, IMovement
         //je save aussi dans le registre la cl� Score
         //HKEY_CURRENT_USER\Software\Unity\UnityEditor\DefaultCompany\Roll_A_Ball
         PlayerPrefs.SetInt("Score", ScoreValue);
-
+        scoreText.text = "Score: " + ScoreValue.ToString();
         //TODO:Instancier 3 mur autour du player
         //Instantiate(_wallPrefab, _scenario.Wall[_scenario.Score - 1], Quaternion.identity);
 

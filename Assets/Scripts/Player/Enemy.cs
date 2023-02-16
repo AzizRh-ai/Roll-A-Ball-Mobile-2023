@@ -6,8 +6,8 @@ public class Enemy : MonoBehaviour, IMovement
     [Header("Target")]
     [SerializeField] private Player _player;
 
-    public float jumpForce = 10f;
-    public float speed = 5f;
+    [SerializeField] private float jumpForce = 50f;
+    [SerializeField] private float speed = 5f;
 
     public float JumpForce
     {
@@ -32,9 +32,9 @@ public class Enemy : MonoBehaviour, IMovement
     {
         if (collision.gameObject.tag == "Player")
         {
-            Debug.Log("touché!!!!!");
-            _player.HealtHurt(-1);
-            collision.rigidbody.AddForce(Vector3.up * JumpForce * 50 * Time.deltaTime);
+            if (_player.isGrounded)
+                _player.HealtHurt(-1);
+            collision.rigidbody.AddForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
         }
     }
 

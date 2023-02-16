@@ -44,12 +44,19 @@ public class GameControlManager : MonoBehaviour
 
     public void RestartBtn()
     {
+        Time.timeScale = 1;
         StartCoroutine(manageScene(SceneManager.GetActiveScene().buildIndex));
     }
     // Quit
     public void QuitGameBtn()
     {
         Application.Quit();
+    }
+
+    public void GameOver()
+    {
+        GameOverPanel.SetActive(true);
+        Time.timeScale = 0;
     }
 
     private void OnApplicationQuit()
