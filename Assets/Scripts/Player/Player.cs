@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -37,10 +36,7 @@ public class Player : MonoBehaviour
     [SerializeField] private InputBtn jumpButton;
     private bool isGrounded = true;
     private Vector2 inputJoystickMovement;
-    public float jumpForce = 10f;
-    public float smoothness = 10.0f;
-
-
+    [SerializeField] private float jumpForce = 10f;
 
     private void Start()
     {
@@ -65,6 +61,7 @@ public class Player : MonoBehaviour
             _rigidbody.AddForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
         }
     }
+
     private void OnCollisionEnter(Collision collision)
     {
         switch (collision.gameObject.tag)
@@ -78,10 +75,12 @@ public class Player : MonoBehaviour
                 break;
             case "Finish":
                 //lancer level suivant..
-                StartCoroutine(manageScene(SceneManager.GetActiveScene().buildIndex + 1));
+                StartCoroutine(GameControlManager.instance.manageScene(SceneManager.GetActiveScene().buildIndex + 1));
                 break;
             case "GameOverPlane":
-                StartCoroutine(manageScene(SceneManager.GetActiveScene().buildIndex));
+                gameOver.SetActive(true);
+                Time.timeScale = 0;
+                StartCoroutine(GameControlManager.instance.manageScene(SceneManager.GetActiveScene().buildIndex));
                 break;
             default:
                 break;
@@ -97,6 +96,7 @@ public class Player : MonoBehaviour
         }
     }
 
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Coin"))
@@ -109,55 +109,21 @@ public class Player : MonoBehaviour
             Destroy(other.gameObject);
         }
     }
+
     private void UpdateScore()
     {
         ScoreValue++;
 
-
         //j'invoque OnScoreUpdate
         OnScoreUpdate?.Invoke(ScoreValue);
-
-        // je save jusqu'a la fin de session
-        // _scenario.Score = ScoreValue;
 
         //je save aussi dans le registre la cl� Score
         //HKEY_CURRENT_USER\Software\Unity\UnityEditor\DefaultCompany\Roll_A_Ball
         PlayerPrefs.SetInt("Score", ScoreValue);
 
-        //J'instancie le mur a une position suivant l'index du tableau dans scenario..
-        // Instantiate(_wallPrefab, _scenario.Wall[_scenario.Score - 1], Quaternion.identity);
+        //TODO:Instancier 3 mur autour du player
+        //Instantiate(_wallPrefab, _scenario.Wall[_scenario.Score - 1], Quaternion.identity);
 
-        // si score =8 niveau suivant
-        if (ScoreValue == 8)
-        {
-            // Je save score dans scenario pour le niveau suivant
-            // _scenario.Score = ScoreValue;
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        }
-        else if (ScoreValue == 16)
-        {
-            gameOver.SetActive(true);
-            Time.timeScale = 0;
-        }
     }
 
-    private void OnDestroy()
-    {
-        //On supprime la cl� de registre une fois terminer.
-        PlayerPrefs.DeleteKey("Score");
-    }
-
-    IEnumerator manageScene(int lvlIndex)
-    {
-        if (SceneManager.GetActiveScene().buildIndex != 0)
-        {
-
-            SceneManager.LoadScene(lvlIndex);
-        }
-        else
-        {
-            SceneManager.LoadScene(0);
-        }
-        yield return null;
-    }
 }
