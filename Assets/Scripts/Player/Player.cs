@@ -3,8 +3,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IMovement
 {
     //Event
     public delegate void OnScoreMessage(int value);
@@ -12,7 +13,6 @@ public class Player : MonoBehaviour
 
 
     [Header("Ball")]
-    [SerializeField] private float speed = 300f;
     private Rigidbody _rigidbody;
 
     [Header("Prefab")]
@@ -30,19 +30,27 @@ public class Player : MonoBehaviour
     [Header("GameOver UI")]
     [SerializeField] private GameObject gameOver;
 
-    [SerializeField] private float gravityScale = 5;
 
     [Header("Input")]
     [SerializeField] private InputBtn jumpButton;
     private bool isGrounded = true;
     private Vector2 inputJoystickMovement;
+
     [SerializeField] private float jumpForce = 10f;
+    [SerializeField] private float speed = 5f;
+
+    [SerializeField] private int healt = 5;
+    [SerializeField] private Image[] hearts;
+
+    public float JumpForce { get { return jumpForce; } }
+
+    public float Speed { get { return speed; } }
 
     private void Start()
     {
         jumpButton = FindObjectOfType<InputBtn>();
         _rigidbody = GetComponent<Rigidbody>();
-        // Instantiate();
+        SetHealtUi();
     }
 
     private void OnMove(InputValue movementValue)
@@ -68,6 +76,7 @@ public class Player : MonoBehaviour
         {
             case "Enemy":
                 Destroy(collision.gameObject);
+
                 UpdateScore();
                 break;
             case "Ground":
@@ -79,17 +88,37 @@ public class Player : MonoBehaviour
                 break;
             case "GameOverPlane":
                 gameOver.SetActive(true);
-                Time.timeScale = 0;
-                StartCoroutine(GameControlManager.instance.manageScene(SceneManager.GetActiveScene().buildIndex));
+                //Time.timeScale = 0;
                 break;
             default:
                 break;
         }
     }
 
+    public void HealtHurt(int value)
+    {
+        healt += value;
+
+        if (healt <= 0)
+        {
+            gameOver.SetActive(true);
+            healt = 0;
+            Time.timeScale = 0;
+        }
+
+        SetHealtUi();
+    }
+
+    private void SetHealtUi()
+    {
+        for (int i = 0; i < hearts.Length; i++)
+        {
+            hearts[i].enabled = i < healt;
+        }
+    }
+
     void OnCollisionExit(Collision collision)
     {
-
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = false;
