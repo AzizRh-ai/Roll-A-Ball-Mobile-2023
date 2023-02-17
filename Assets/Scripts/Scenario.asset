@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Scenario
   m_EditorClassIdentifier: 
   EnemySpawnPosition:
-  - {x: -9.15, y: 1.21, z: 29.75}
+  - {x: -15.69, y: 2, z: 24}
   - {x: -9.76, y: 1.37, z: 5.62}
   - {x: 6.4, y: 7.74, z: 13.2}
+  - {x: -16.4, y: 0, z: 19.89}

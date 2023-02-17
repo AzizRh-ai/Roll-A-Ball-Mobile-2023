@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -17,14 +16,15 @@ public class Player : MonoBehaviour, IMovement
 
     [Header("Prefab")]
     [SerializeField] private GameObject _coinEffectPrefab;
-    [SerializeField] private List<GameObject> ennemyPrefab;
+    [SerializeField] private GameObject _keyEffectPrefab;
 
     [Header("Score Value")]
     private int ScoreValue = 0;
 
     // Score
-    [Header("Score UI")]
+    [Header("UI")]
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private GameObject LockPanelUi;
 
     // Score
     [Header("GameOver UI")]
@@ -33,36 +33,57 @@ public class Player : MonoBehaviour, IMovement
 
     [Header("Input")]
     [SerializeField] private InputBtn jumpButton;
-    public bool isGrounded = true;
-    private Vector2 inputJoystickMovement;
+    private float movementX;
+    private float movementY;
 
+    [Header("Player")]
     [SerializeField] private float jumpForce = 10f;
     [SerializeField] private float speed = 5f;
+    public bool isGrounded = true;
 
+    [Header("Healt")]
     [SerializeField] private int healt = 5;
     [SerializeField] private Image[] hearts;
     [SerializeField] private Image Keys;
+    [SerializeField] private TextMeshProUGUI KeyUi;
 
+    [Header("Animation")]
+    [SerializeField] private Animation door;
+
+    [Header("SpawnCoin")]
+    [SerializeField] private WaveManager _waveManager;
+    [SerializeField] private float playerDistanceSpawn = 5f;
     public float JumpForce { get { return jumpForce; } }
 
     public float Speed { get { return speed; } }
 
+    public static Player instance;
+
+
+    void Awake()
+    {
+        instance = this;
+    }
     private void Start()
     {
         // Todo: tester sur Mobile 
         jumpButton = FindObjectOfType<InputBtn>();
         _rigidbody = GetComponent<Rigidbody>();
         SetHealtUi();
+        Keys.enabled = false;
     }
 
     private void OnMove(InputValue movementValue)
     {
-        inputJoystickMovement = movementValue.Get<Vector2>();
+        Vector2 movementVector = movementValue.Get<Vector2>();
+        movementX = movementVector.x;
+        movementY = movementVector.y;
+
     }
 
     private void FixedUpdate()
     {
-        Vector3 movement = new Vector3(inputJoystickMovement.x * speed, 0f, inputJoystickMovement.y * speed);
+        Vector3 movement = new Vector3(movementX, 0f, movementY);
 
         _rigidbody.AddForce(movement * speed);
 
@@ -81,7 +102,8 @@ public class Player : MonoBehaviour, IMovement
                 {
                     Destroy(collision.gameObject);
                 }
-
+                Vector3 enemySpawnPosition = collision.transform.position + playerDistanceSpawn * Random.insideUnitSphere;
+                _waveManager.SpawnCoin(enemySpawnPosition);
                 break;
             case "Ground":
                 isGrounded = true;
@@ -92,6 +114,17 @@ public class Player : MonoBehaviour, IMovement
                 break;
             case "GameOverPlane":
                 GameControlManager.instance.GameOver();
+                break;
+            case "Door":
+                if (KeyUi.text == "1")
+                {
+                    door.Play();
+                    StartCoroutine(GameControlManager.instance.manageScene(SceneManager.GetActiveScene().buildIndex + 1));
+                }
+                else
+                {
+                    LockPanelUi.SetActive(true);
+                }
                 break;
             default:
                 break;
@@ -120,12 +153,12 @@ public class Player : MonoBehaviour, IMovement
 
     void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        isGrounded = false;
+        if (collision.gameObject.CompareTag("Door"))
         {
-            isGrounded = false;
+            LockPanelUi.SetActive(false);
         }
     }
-
 
     private void OnTriggerEnter(Collider other)
     {
@@ -140,6 +173,8 @@ public class Player : MonoBehaviour, IMovement
         }
         else if (other.gameObject.CompareTag("Key"))
         {
+            Keys.enabled = true;
+            KeyUi.text = "1";
             UpdateScore(50);
             GameObject go = Instantiate(_coinEffectPrefab, other.transform.position, Quaternion.identity);
             Destroy(go, .2f);
@@ -155,13 +190,9 @@ public class Player : MonoBehaviour, IMovement
         //j'invoque OnScoreUpdate
         OnScoreUpdate?.Invoke(ScoreValue);
 
-        //je save aussi dans le registre la cl� Score
         //HKEY_CURRENT_USER\Software\Unity\UnityEditor\DefaultCompany\Roll_A_Ball
         PlayerPrefs.SetInt("Score", ScoreValue);
         scoreText.text = ScoreValue.ToString();
-        //TODO:Instancier 3 mur autour du player
-        //Instantiate(_wallPrefab, _scenario.Wall[_scenario.Score - 1], Quaternion.identity);
-
     }
 
 }

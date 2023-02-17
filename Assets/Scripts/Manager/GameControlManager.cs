@@ -5,11 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class GameControlManager : MonoBehaviour
 {
+
     public static GameControlManager instance;
-    [SerializeField] private GameObject GameOverPanel;
+
     [Header("Timer UI")]
     [SerializeField] private TextMeshProUGUI TimerUi;
-    private float timer = 30f;
+    [SerializeField] private float timer = 30f;
+
+    [Header("GameOver UI")]
+    [SerializeField] private GameObject GameOverPanel;
 
     // Check/Set only 1 instance
     void Awake()
@@ -40,18 +44,16 @@ public class GameControlManager : MonoBehaviour
     // Load/Reload Scene
     public IEnumerator manageScene(int lvlIndex)
     {
-        if (SceneManager.GetActiveScene().buildIndex != 0)
+        if (SceneManager.sceneCount > lvlIndex)
         {
-
-            SceneManager.LoadScene(lvlIndex);
+            Scene scene = SceneManager.GetSceneByBuildIndex(lvlIndex);
+            if (scene.IsValid())
+                SceneManager.LoadScene(lvlIndex);
+            else
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            yield return null;
         }
-        else
-        {
-            SceneManager.LoadScene(0);
-        }
-        yield return null;
     }
-
     public void RestartBtn()
     {
         Time.timeScale = 1;
