@@ -6,7 +6,7 @@ public class ACoin : MonoBehaviour
     [SerializeField] private Vector3 direction;
 
     [SerializeField] private WaveManager _waveManager;
-    [SerializeField] private float enemyDistanceSpawn = 5f;
+    [SerializeField] private float enemyDistanceSpawn = 1f;
 
     // Update is called once per frame
     void Update()
