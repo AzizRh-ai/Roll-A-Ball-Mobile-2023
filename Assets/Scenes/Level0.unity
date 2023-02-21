@@ -1185,7 +1185,7 @@ Transform:
   - {fileID: 994838928}
   - {fileID: 2000825082}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &472059927
 GameObject:
@@ -3123,8 +3123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab:
-  - {fileID: 4903082384367912932, guid: a6e0966666373b545a5f84bb85ddee0a, type: 3}
-  - {fileID: 6925067921324646938, guid: 8f34b05329075884ea619ccb8219c240, type: 3}
+  - {fileID: 9190439770356828370, guid: 2406db295dcc492488aa62d4f639b8e5, type: 3}
   coinPrefab: {fileID: 1915213442188405525, guid: f2acab42b3fded34caac8540186013e4,
     type: 3}
   scenario: {fileID: 11400000, guid: 11bcabd265b925848b79d0725d9e299a, type: 2}
@@ -19330,7 +19329,7 @@ PrefabInstance:
     - target: {fileID: 8717220681134750300, guid: 5c5f9eba315b3d74984703541feba7e3,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8717220681134750300, guid: 5c5f9eba315b3d74984703541feba7e3,
         type: 3}
@@ -19345,7 +19344,7 @@ PrefabInstance:
     - target: {fileID: 8717220681134750300, guid: 5c5f9eba315b3d74984703541feba7e3,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.9
       objectReference: {fileID: 0}
     - target: {fileID: 8717220681134750300, guid: 5c5f9eba315b3d74984703541feba7e3,
         type: 3}
@@ -19386,6 +19385,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player-------------------
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717220681868649978, guid: 5c5f9eba315b3d74984703541feba7e3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717220681868649979, guid: 5c5f9eba315b3d74984703541feba7e3,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.2
       objectReference: {fileID: 0}
     - target: {fileID: 8717220681995909719, guid: 5c5f9eba315b3d74984703541feba7e3,
         type: 3}
