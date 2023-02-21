@@ -5,9 +5,12 @@ public class ACoin : MonoBehaviour
     [Header("Coin rotation")]
     [SerializeField] private Vector3 direction;
 
-    [SerializeField] private WaveManager _waveManager;
+    public WaveManager _waveManager;
     [SerializeField] private float enemyDistanceSpawn = 1f;
-
+    private void Start()
+    {
+        _waveManager = WaveManager.instance;
+    }
     // Update is called once per frame
     void Update()
     {

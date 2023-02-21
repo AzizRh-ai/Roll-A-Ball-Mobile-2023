@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class WaveManager : MonoBehaviour
 {
+
     [Header("Enemy")]
     [SerializeField] private GameObject[] enemyPrefab;
 
@@ -10,6 +11,13 @@ public class WaveManager : MonoBehaviour
 
     [Header("Spawn Scenario")]
     [SerializeField] private Scenario scenario;
+
+    public static WaveManager instance;
+
+    void Awake()
+    {
+        instance = this;
+    }
 
     private void CreateEnemy(Vector3 position)
     {

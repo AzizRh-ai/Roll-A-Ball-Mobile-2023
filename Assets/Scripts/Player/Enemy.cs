@@ -39,16 +39,4 @@ public class Enemy : MonoBehaviour, IMovement
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            if (player.isGrounded)
-            {
-                player.HealtHurt(-1);
-                collision.rigidbody.AddForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
-            }
-        }
-    }
-
 }

@@ -15,6 +15,12 @@ public class GameControlManager : MonoBehaviour
     [Header("GameOver UI")]
     [SerializeField] private GameObject GameOverPanel;
 
+
+    [Header("Win UI")]
+    [SerializeField] private GameObject WinPanel;
+
+    [SerializeField] private AudioClip[] _audioClips;
+    private AudioSource audioSource;
     // Check/Set only 1 instance
     void Awake()
     {
@@ -25,6 +31,7 @@ public class GameControlManager : MonoBehaviour
     private void Start()
     {
         GameOverPanel.SetActive(false);
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -44,15 +51,29 @@ public class GameControlManager : MonoBehaviour
     // Load/Reload Scene
     public IEnumerator manageScene(int lvlIndex)
     {
-        if (SceneManager.sceneCount > lvlIndex)
+        if (SceneManager.GetActiveScene().buildIndex != 1)
         {
-            Scene scene = SceneManager.GetSceneByBuildIndex(lvlIndex);
-            if (scene.IsValid())
-                SceneManager.LoadScene(lvlIndex);
-            else
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            yield return null;
+
+            SceneManager.LoadScene(lvlIndex);
         }
+        else
+        {
+            SceneManager.LoadScene(1);
+        }
+        Time.timeScale = 1;
+
+        yield return null;
+    }
+
+    public void LoadMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void LoadNextLevel()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
     public void RestartBtn()
     {
@@ -67,8 +88,17 @@ public class GameControlManager : MonoBehaviour
 
     public void GameOver()
     {
+        audioSource.PlayOneShot(_audioClips[1]);
         TimerUi.text = "0";
         GameOverPanel.SetActive(true);
+        Time.timeScale = 0;
+    }
+
+    public void LoadWinMenu()
+    {
+        audioSource.PlayOneShot(_audioClips[0]);
+        TimerUi.text = "";
+        WinPanel.SetActive(true);
         Time.timeScale = 0;
     }
 

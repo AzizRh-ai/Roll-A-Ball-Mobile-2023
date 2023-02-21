@@ -38,8 +38,8 @@ public class Player : MonoBehaviour, IMovement
 
     [Header("Player")]
     [SerializeField] private float jumpForce = 10f;
-    [SerializeField] private float speed = 5f;
-    public bool isGrounded = true;
+    [SerializeField] private float speed = 3f;
+    public bool isGrounded = false;
 
     [Header("Healt")]
     [SerializeField] private int healt = 5;
@@ -59,6 +59,8 @@ public class Player : MonoBehaviour, IMovement
 
     public static Player instance;
 
+    [SerializeField] private AudioClip[] _audioClips;
+    private AudioSource audioSource;
 
     void Awake()
     {
@@ -66,30 +68,36 @@ public class Player : MonoBehaviour, IMovement
     }
     private void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+
         // Todo: tester sur Mobile 
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            speed = 10f;
+        }
         jumpButton = FindObjectOfType<InputBtn>();
         _rigidbody = GetComponent<Rigidbody>();
         SetHealtUi();
         Keys.enabled = false;
     }
-
     private void OnMove(InputValue movementValue)
     {
         Vector2 movementVector = movementValue.Get<Vector2>();
         movementX = movementVector.x;
         movementY = movementVector.y;
-
     }
 
     private void FixedUpdate()
     {
-        Vector3 movement = new Vector3(movementX, 0f, movementY);
+        // Créer un vecteur de direction à partir des valeurs X et Y du joystick
+        Vector3 direction = new Vector3(movementX, 0, movementY);
 
-        _rigidbody.AddForce(movement * speed);
+        // Déplacer la boule en fonction de la direction et de la vitesse
+        _rigidbody.AddForce(direction * speed);
 
         if (jumpButton.clicked && isGrounded)
         {
-            _rigidbody.AddForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
+            _rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
 
@@ -102,15 +110,18 @@ public class Player : MonoBehaviour, IMovement
                 {
                     Destroy(collision.gameObject);
                 }
+                else
+                {
+                    audioSource.PlayOneShot(_audioClips[2]);
+                    HealtHurt(-1);
+                    collision.rigidbody.AddForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
+                }
                 Vector3 enemySpawnPosition = collision.transform.position + playerDistanceSpawn * Random.insideUnitSphere;
                 _waveManager.SpawnCoin(enemySpawnPosition);
+
                 break;
             case "Ground":
                 isGrounded = true;
-                break;
-            case "Finish":
-                //lancer level suivant..
-                StartCoroutine(GameControlManager.instance.manageScene(SceneManager.GetActiveScene().buildIndex + 1));
                 break;
             case "GameOverPlane":
                 GameControlManager.instance.GameOver();
@@ -119,7 +130,9 @@ public class Player : MonoBehaviour, IMovement
                 if (KeyUi.text == "1")
                 {
                     door.Play();
-                    StartCoroutine(GameControlManager.instance.manageScene(SceneManager.GetActiveScene().buildIndex + 1));
+                    PlayerPrefs.SetInt("lastLevel", SceneManager.GetActiveScene().buildIndex + 1);
+                    // lancer panel fin de partie
+                    GameControlManager.instance.LoadWinMenu();
                 }
                 else
                 {
@@ -151,6 +164,13 @@ public class Player : MonoBehaviour, IMovement
         }
     }
 
+    void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.tag == "Ground")
+        {
+            isGrounded = true;
+        }
+    }
     void OnCollisionExit(Collision collision)
     {
         isGrounded = false;
@@ -162,17 +182,21 @@ public class Player : MonoBehaviour, IMovement
 
     private void OnTriggerEnter(Collider other)
     {
+
         if (other.gameObject.CompareTag("Coin"))
         {
             UpdateScore();
+            audioSource.PlayOneShot(_audioClips[1]);
             //lancer particule et detruire après 2sec..
             GameObject go = Instantiate(_coinEffectPrefab, other.transform.position, Quaternion.identity);
             Destroy(go, .2f);
             //destruction de l'ojb
             Destroy(other.gameObject);
         }
+
         else if (other.gameObject.CompareTag("Key"))
         {
+            audioSource.PlayOneShot(_audioClips[0]);
             Keys.enabled = true;
             KeyUi.text = "1";
             UpdateScore(50);

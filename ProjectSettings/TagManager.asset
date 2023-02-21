@@ -10,6 +10,7 @@ TagManager:
   - Coin
   - Key
   - Door
+  - PlayerTeleport
   layers:
   - Default
   - TransparentFX
