@@ -1249,7 +1249,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   direction: {x: 0, y: 0, z: 115}
   _waveManager: {fileID: 994838927}
-  enemyDistanceSpawn: 50
+  enemyDistanceSpawn: 20
 --- !u!23 &472059931
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2438,7 +2438,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   direction: {x: 0, y: 0, z: 115}
   _waveManager: {fileID: 994838927}
-  enemyDistanceSpawn: 50
+  enemyDistanceSpawn: 20
 --- !u!23 &827980244
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3879,7 +3879,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   direction: {x: 0, y: 0, z: 115}
   _waveManager: {fileID: 994838927}
-  enemyDistanceSpawn: 50
+  enemyDistanceSpawn: 20
 --- !u!23 &1337319718
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4711,7 +4711,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   direction: {x: 0, y: 0, z: 115}
   _waveManager: {fileID: 994838927}
-  enemyDistanceSpawn: 50
+  enemyDistanceSpawn: 20
 --- !u!23 &1539202963
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5744,7 +5744,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   direction: {x: 0, y: 0, z: 115}
   _waveManager: {fileID: 994838927}
-  enemyDistanceSpawn: 50
+  enemyDistanceSpawn: 20
 --- !u!23 &1809542459
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -16114,7 +16114,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   direction: {x: 0, y: 0, z: 115}
   _waveManager: {fileID: 994838927}
-  enemyDistanceSpawn: 50
+  enemyDistanceSpawn: 20
 --- !u!1 &6820157390816696443
 GameObject:
   m_ObjectHideFlags: 0
@@ -17026,7 +17026,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   direction: {x: 0, y: 0, z: 115}
   _waveManager: {fileID: 994838927}
-  enemyDistanceSpawn: 50
+  enemyDistanceSpawn: 20
 --- !u!1 &7398125200463444791
 GameObject:
   m_ObjectHideFlags: 0

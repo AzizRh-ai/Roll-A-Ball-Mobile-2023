@@ -26,7 +26,7 @@ public class WaveManager : MonoBehaviour
 
     private void CreateCoin(Vector3 position)
     {
-        Instantiate(coinPrefab, position, Quaternion.identity);
+        Instantiate(coinPrefab, new Vector3(position.x, 1f, position.z ), Quaternion.identity);
     }
 
     public void SpawnCoin(Vector3 position)
