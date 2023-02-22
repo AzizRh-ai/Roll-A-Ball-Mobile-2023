@@ -114,7 +114,7 @@ public class Player : MonoBehaviour, IMovement
                 {
                     audioSource.PlayOneShot(_audioClips[2]);
                     HealtHurt(-1);
-                    collision.rigidbody.AddForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
+                    _rigidbody.AddForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
                 }
                 Vector3 enemySpawnPosition = collision.transform.position + playerDistanceSpawn * Random.insideUnitSphere;
                 _waveManager.SpawnCoin(enemySpawnPosition);
